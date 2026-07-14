@@ -4,7 +4,7 @@ import { AppButton } from '@/shared/components/app-button';
 import { AppInput } from '@/shared/components/app-input';
 import { ErrorState, LoadingState } from '@/shared/components/query-state';
 import { useAppTheme } from '@/shared/theme/use-app-theme';
-import { Link } from 'expo-router';
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
@@ -72,13 +72,7 @@ function SettingsLink({
   href: '/settings/notifications' | '/settings/backup' | '/settings/synchronization';
   label: string;
 }) {
-  return (
-    <Link href={href} asChild>
-      <View>
-        <AppButton label={label} />
-      </View>
-    </Link>
-  );
+  return <AppButton label={label} onPress={() => router.push(href)} />;
 }
 const styles = StyleSheet.create({
   screen: { padding: 20, gap: 16 },

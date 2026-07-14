@@ -78,7 +78,10 @@ export default function DecksScreen() {
         renderItem={({ item }) => (
           <Link href={{ pathname: '/deck/[id]', params: { id: item.id } }} asChild>
             <Pressable
-              style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}
+              style={StyleSheet.flatten([
+                styles.card,
+                { backgroundColor: colors.surface, borderColor: colors.border },
+              ])}
             >
               <View style={styles.cardHead}>
                 <Text style={[styles.title, { color: colors.text }]}>{item.name}</Text>
@@ -101,7 +104,7 @@ export default function DecksScreen() {
       <Link href="/deck/create" asChild>
         <Pressable
           accessibilityLabel="Thêm bộ thẻ"
-          style={[styles.fab, { backgroundColor: colors.primary }]}
+          style={StyleSheet.flatten([styles.fab, { backgroundColor: colors.primary }])}
         >
           <Text style={[styles.fabText, { color: colors.background }]}>＋</Text>
         </Pressable>

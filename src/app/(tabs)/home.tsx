@@ -4,7 +4,7 @@ import { useActiveStudySessionQuery } from '@/features/study/hooks/use-study';
 import { AppButton } from '@/shared/components/app-button';
 import { ErrorState, LoadingState } from '@/shared/components/query-state';
 import { useAppTheme } from '@/shared/theme/use-app-theme';
-import { Link } from 'expo-router';
+import { router } from 'expo-router';
 import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 export default function HomeScreen() {
   const { colors } = useAppTheme();
@@ -13,6 +13,7 @@ export default function HomeScreen() {
   if (dashboard.isLoading) return <LoadingState />;
   if (!dashboard.data) return <ErrorState onRetry={() => dashboard.refetch()} />;
   const d = dashboard.data;
+  const activeSession = active.data;
   return (
     <ScrollView
       style={{ backgroundColor: colors.background }}
@@ -23,20 +24,15 @@ export default function HomeScreen() {
     >
       <Text style={[s.title, { color: colors.text }]}>Hôm nay</Text>
       <Text style={{ color: colors.textMuted }}>Mỗi ngày một chút, nhớ lâu hơn.</Text>
-      {active.data ? (
-        <Link href={{ pathname: '/study/session', params: { id: active.data.id } }} asChild>
-          <View>
-            <AppButton
-              label={`Tiếp tục (${active.data.answeredCards}/${active.data.totalCards})`}
-            />
-          </View>
-        </Link>
+      {activeSession ? (
+        <AppButton
+          label={`Tiếp tục (${activeSession.answeredCards}/${activeSession.totalCards})`}
+          onPress={() =>
+            router.push({ pathname: '/study/session', params: { id: activeSession.id } })
+          }
+        />
       ) : (
-        <Link href="/study/setup" asChild>
-          <View>
-            <AppButton label="Bắt đầu học" />
-          </View>
-        </Link>
+        <AppButton label="Bắt đầu học" onPress={() => router.push('/study/setup')} />
       )}
       <View style={s.metrics}>
         <MetricCard

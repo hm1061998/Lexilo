@@ -1,4 +1,4 @@
-import type { Theme } from '@react-navigation/native';
+import type { Theme } from 'expo-router/react-navigation';
 import { useColorScheme } from 'react-native';
 
 import { darkColors, lightColors } from './tokens';

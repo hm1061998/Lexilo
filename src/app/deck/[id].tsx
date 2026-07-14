@@ -110,10 +110,10 @@ export default function DeckDetailScreen() {
           renderItem={({ item: card }) => (
             <Link href={{ pathname: '/card/[id]', params: { id: card.id } }} asChild>
               <Pressable
-                style={[
+                style={StyleSheet.flatten([
                   styles.card,
                   { backgroundColor: colors.surface, borderColor: colors.border },
-                ]}
+                ])}
               >
                 <Text style={[styles.cardTitle, { color: colors.text }]}>{card.frontText}</Text>
                 <Text numberOfLines={2} style={{ color: colors.textMuted }}>
@@ -128,16 +128,15 @@ export default function DeckDetailScreen() {
         />
       )}
       <View style={styles.add}>
-        <Link href={{ pathname: '/study/setup', params: { deckId: id } }} asChild>
-          <View>
-            <AppButton label="Học bộ thẻ" />
-          </View>
-        </Link>
-        <Link href={{ pathname: '/deck/[deckId]/card/create', params: { deckId: id } }} asChild>
-          <View>
-            <AppButton label="Thêm flashcard" variant="secondary" />
-          </View>
-        </Link>
+        <AppButton
+          label="Học bộ thẻ"
+          onPress={() => router.push({ pathname: '/study/setup', params: { deckId: id } })}
+        />
+        <AppButton
+          label="Thêm flashcard"
+          variant="secondary"
+          onPress={() => router.push({ pathname: '/deck/[deckId]/card/create', params: { deckId: id } })}
+        />
       </View>
     </View>
   );
