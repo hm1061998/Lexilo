@@ -5,6 +5,7 @@ import { useAppTheme } from '@/shared/theme/use-app-theme';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { cardFormSchema, type CardFormValues } from '../schemas/card-form-schema';
 
 const fields: {
@@ -43,6 +44,7 @@ export function CardForm({
   onSubmit: (values: CardFormValues) => void;
 }) {
   const { colors } = useAppTheme();
+  const insets = useSafeAreaInsets();
   const {
     control,
     handleSubmit,
@@ -70,7 +72,10 @@ export function CardForm({
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView
-        contentContainerStyle={[styles.content, { backgroundColor: colors.background }]}
+        contentContainerStyle={[
+          styles.content,
+          { backgroundColor: colors.background, paddingTop: Math.max(insets.top, 18) },
+        ]}
         keyboardShouldPersistTaps="handled"
       >
         {fields.map(({ name, label, multiline }) => (

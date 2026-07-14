@@ -3,13 +3,19 @@ import { AppButton } from '@/shared/components/app-button';
 import { LoadingState } from '@/shared/components/query-state';
 import { useAppTheme } from '@/shared/theme/use-app-theme';
 import { ScrollView, StyleSheet, Text } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 export default function SyncScreen() {
   const { colors } = useAppTheme(),
     status = useSyncStatus(),
     sync = useManualSync();
+  const insets = useSafeAreaInsets();
+
   if (status.isLoading) return <LoadingState />;
   return (
-    <ScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={s.screen}>
+    <ScrollView
+      style={{ backgroundColor: colors.background }}
+      contentContainerStyle={[s.screen, { paddingTop: Math.max(insets.top, 18) }]}
+    >
       <Text style={[s.title, { color: colors.text }]}>Đồng bộ offline</Text>
       <Text style={{ color: colors.textMuted }}>
         Adapter hiện tại là mock local dành cho development và kiểm thử.

@@ -8,6 +8,8 @@ import { ErrorState, LoadingState } from '@/shared/components/query-state';
 import { useAppTheme } from '@/shared/theme/use-app-theme';
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 export default function NotificationsScreen() {
   const q = useReminderSettings();
   if (q.isLoading) return <LoadingState />;
@@ -19,13 +21,17 @@ function Form({
 }: {
   initial: NonNullable<ReturnType<typeof useReminderSettings>['data']>;
 }) {
+  const insets = useSafeAreaInsets();
   const { colors } = useAppTheme(),
     save = useSaveReminder();
   const [enabled, setEnabled] = useState(initial.enabled),
     [hour, setHour] = useState(String(initial.reminderHour)),
     [minute, setMinute] = useState(String(initial.reminderMinute));
   return (
-    <ScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={s.screen}>
+    <ScrollView
+      style={{ backgroundColor: colors.background }}
+      contentContainerStyle={[s.screen, { paddingTop: Math.max(insets.top, 18) }]}
+    >
       <Text style={[s.title, { color: colors.text }]}>Nhắc học</Text>
       <Text style={{ color: colors.textMuted }}>
         Lexilo chỉ xin quyền khi bạn bật tính năng này.

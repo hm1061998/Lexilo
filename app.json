@@ -24,7 +24,7 @@
         "android.permission.FOREGROUND_SERVICE",
         "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
       ],
-      "package": "com.hm1061998.lexilo"
+      "package": "com.hmstack.lexilo"
     },
     "web": {
       "output": "static",

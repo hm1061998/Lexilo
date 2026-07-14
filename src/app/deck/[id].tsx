@@ -13,10 +13,12 @@ import { useAppTheme } from '@/shared/theme/use-app-theme';
 import { Link, router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Alert, FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function DeckDetailScreen() {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
   const { colors } = useAppTheme();
+  const insets = useSafeAreaInsets();
   const [search, setSearch] = useState('');
   const deck = useDeckDetailQuery(id);
   const cards = useCardsQuery({ deckId: id, search: useDebouncedValue(search), limit: 50 });
@@ -43,8 +45,24 @@ export default function DeckDetailScreen() {
     );
   return (
     <View style={[styles.screen, { backgroundColor: colors.background }]}>
-      <View style={styles.header}>
-        <Text style={[styles.title, { color: colors.text }]}>{item.name}</Text>
+      <View style={[styles.header, { paddingTop: Math.max(insets.top, 18) }]}>
+        <View style={styles.headerRow}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Quay lại danh sách bộ thẻ"
+            hitSlop={10}
+            onPress={() => (router.canGoBack() ? router.back() : router.replace('/(tabs)/decks'))}
+            style={({ pressed }) => [
+              styles.backButton,
+              { borderColor: colors.border, opacity: pressed ? 0.65 : 1 },
+            ]}
+          >
+            <Text style={[styles.backIcon, { color: colors.text }]}>‹</Text>
+          </Pressable>
+          <Text numberOfLines={2} style={[styles.title, { color: colors.text }]}>
+            {item.name}
+          </Text>
+        </View>
         <Text style={{ color: colors.textMuted }}>{item.description}</Text>
         <Text style={{ color: colors.textMuted }}>
           {item.languageFrom} → {item.languageTo} · {item.cardCount} thẻ
@@ -127,7 +145,7 @@ export default function DeckDetailScreen() {
           )}
         />
       )}
-      <View style={styles.add}>
+      <View style={[styles.add, { bottom: Math.max(insets.bottom, 20) }]}>
         <AppButton
           label="Học bộ thẻ"
           onPress={() => router.push({ pathname: '/study/setup', params: { deckId: id } })}
@@ -135,7 +153,9 @@ export default function DeckDetailScreen() {
         <AppButton
           label="Thêm flashcard"
           variant="secondary"
-          onPress={() => router.push({ pathname: '/deck/[deckId]/card/create', params: { deckId: id } })}
+          onPress={() =>
+            router.push({ pathname: '/deck/[deckId]/card/create', params: { deckId: id } })
+          }
         />
       </View>
     </View>
@@ -144,6 +164,16 @@ export default function DeckDetailScreen() {
 const styles = StyleSheet.create({
   screen: { flex: 1 },
   header: { padding: 18, gap: 9 },
+  headerRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  backButton: {
+    width: 40,
+    height: 40,
+    borderWidth: 1,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  backIcon: { fontSize: 32, lineHeight: 34, marginTop: -2 },
   title: { fontSize: 26, fontWeight: '800' },
   actions: { flexDirection: 'row', gap: 20, marginVertical: 8 },
   search: { minHeight: 46, borderWidth: 1, borderRadius: 12, paddingHorizontal: 14 },

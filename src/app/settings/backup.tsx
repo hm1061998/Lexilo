@@ -3,12 +3,19 @@ import { AppButton } from '@/shared/components/app-button';
 import { useAppTheme } from '@/shared/theme/use-app-theme';
 import * as Sharing from 'expo-sharing';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 export default function BackupScreen() {
   const { colors } = useAppTheme(),
     history = useBackupHistory(),
     create = useCreateBackup();
+  const insets = useSafeAreaInsets();
+
   return (
-    <ScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={s.screen}>
+    <ScrollView
+      style={{ backgroundColor: colors.background }}
+      contentContainerStyle={[s.screen, { paddingTop: Math.max(insets.top, 18) }]}
+    >
       <Text style={[s.title, { color: colors.text }]}>Sao lưu cục bộ</Text>
       <Text style={{ color: colors.textMuted }}>
         Bản sao lưu chứa dữ liệu học, không chứa token hay binary media.

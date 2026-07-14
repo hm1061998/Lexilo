@@ -13,6 +13,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { deckFormSchema, type DeckFormValues } from '../schemas/deck-form-schema';
 
 export function DeckForm({
@@ -25,6 +26,7 @@ export function DeckForm({
   onSubmit: (values: DeckFormValues) => void;
 }) {
   const { colors } = useAppTheme();
+  const insets = useSafeAreaInsets();
   const {
     control,
     handleSubmit,
@@ -47,7 +49,10 @@ export function DeckForm({
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView
-        contentContainerStyle={[styles.content, { backgroundColor: colors.background }]}
+        contentContainerStyle={[
+          styles.content,
+          { backgroundColor: colors.background, paddingTop: Math.max(insets.top, 18) },
+        ]}
         keyboardShouldPersistTaps="handled"
       >
         <Controller
