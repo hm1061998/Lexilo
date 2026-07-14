@@ -9,9 +9,11 @@ import { initializeDatabase } from '@/database/initialize-database';
 import { queryClient } from '@/services/query/query-client';
 import { DatabaseLoadingScreen } from '@/shared/components/database-loading-screen';
 import { useAppTheme } from '@/shared/theme/use-app-theme';
+import { useNotificationResponseHandler } from '@/features/notifications/hooks/use-notification-response-handler';
 
 export default function RootLayout() {
   const { navigationTheme } = useAppTheme();
+  useNotificationResponseHandler();
 
   return (
     <QueryClientProvider client={queryClient}>

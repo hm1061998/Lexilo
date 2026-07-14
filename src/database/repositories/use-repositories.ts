@@ -6,6 +6,7 @@ import { SQLiteDeckRepository } from '@/features/decks/repositories/sqlite-deck-
 import { SQLiteTagRepository } from '@/features/tags/repositories/sqlite-tag-repository';
 import { SQLiteStudyRepository } from '@/features/study/repositories/sqlite-study-repository';
 import { SQLiteStatisticsRepository } from '@/features/statistics/repositories/sqlite-statistics-repository';
+import { SQLiteNotificationSettingsRepository } from '@/features/notifications/repositories/sqlite-notification-settings.repository';
 
 export function useRepositories() {
   const database = useSQLiteContext();
@@ -16,6 +17,7 @@ export function useRepositories() {
       tags: new SQLiteTagRepository(database),
       study: new SQLiteStudyRepository(database),
       statistics: new SQLiteStatisticsRepository(database),
+      notificationSettings: new SQLiteNotificationSettingsRepository(database),
     }),
     [database],
   );

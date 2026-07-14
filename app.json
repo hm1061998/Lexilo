@@ -27,6 +27,8 @@
       "expo-router",
       "expo-secure-store",
       "expo-sqlite",
+      ["expo-notifications", { "defaultChannel": "learning-reminders" }],
+      ["expo-audio", { "microphonePermission": "Cho phép Lexilo ghi âm phát âm của bạn." }],
       [
         "expo-splash-screen",
         {

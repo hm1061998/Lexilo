@@ -1,3 +1,3 @@
 export const DATABASE_NAME = 'lexilo.db';
 
-export const DATABASE_VERSION = 3;
+export const DATABASE_VERSION = 5;

@@ -1,0 +1,2 @@
+import { getRetryDelay } from '../retry-policy.service';
+describe('retry policy',()=>{it('backs off attempts 1-6',()=>expect([1,2,3,4,5,6].map(attempt=>getRetryDelay({attempt,random:()=>.5}))).toEqual([1000,2000,4000,8000,16000,32000]));it('stops permanent and excessive retries',()=>{expect(getRetryDelay({attempt:1,permanent:true})).toBeNull();expect(getRetryDelay({attempt:7})).toBeNull()});it('honors retry-after',()=>expect(getRetryDelay({attempt:2,retryAfterMs:9000})).toBe(9000));});

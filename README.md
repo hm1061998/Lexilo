@@ -156,3 +156,6 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+# Phase 5
+
+Lexilo includes local learning reminders, English TTS, versioned local backups, network detection and a bounded offline sync queue with a development mock adapter. See [Phase 5 architecture and operations](docs/phase-5-offline-sync-backup.md).
