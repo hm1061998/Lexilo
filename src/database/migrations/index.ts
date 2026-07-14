@@ -1,0 +1,10 @@
+import { initialSchemaMigration } from './001-initial-schema';
+import { phaseTwoIndexesMigration } from './002-phase-two-indexes';
+import { phaseThreeStudyMigration } from './003-phase-three-study';
+import type { DatabaseMigration } from './types';
+
+export const migrations: readonly DatabaseMigration[] = [
+  initialSchemaMigration,
+  phaseTwoIndexesMigration,
+  phaseThreeStudyMigration,
+];

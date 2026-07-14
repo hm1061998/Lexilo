@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "super-english",
-    "slug": "super-english",
+    "name": "Lexilo",
+    "slug": "lexilo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "superenglish",
+    "scheme": "lexilo",
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon"
@@ -25,6 +25,8 @@
     },
     "plugins": [
       "expo-router",
+      "expo-secure-store",
+      "expo-sqlite",
       [
         "expo-splash-screen",
         {
