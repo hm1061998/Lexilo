@@ -1,3 +1,9 @@
+import { useDecksQuery } from '@/features/decks/hooks/use-decks';
+import { useCreateStudySessionMutation } from '@/features/study/hooks/use-study';
+import type { StudyMode, StudyScope } from '@/features/study/types/study.types';
+import { AppButton } from '@/shared/components/app-button';
+import { LoadingState } from '@/shared/components/query-state';
+import { useAppTheme } from '@/shared/theme/use-app-theme';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import {
@@ -10,12 +16,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { useDecksQuery } from '@/features/decks/hooks/use-decks';
-import { useCreateStudySessionMutation } from '@/features/study/hooks/use-study';
-import type { StudyMode, StudyScope } from '@/features/study/types/study.types';
-import { AppButton } from '@/shared/components/app-button';
-import { LoadingState } from '@/shared/components/query-state';
-import { useAppTheme } from '@/shared/theme/use-app-theme';
+
 export default function StudySetupScreen() {
   const params = useLocalSearchParams<{ deckId?: string }>();
   const { colors } = useAppTheme();

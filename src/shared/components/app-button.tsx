@@ -1,6 +1,6 @@
+import { useAppTheme } from '@/shared/theme/use-app-theme';
 import type { PressableProps, StyleProp, ViewStyle } from 'react-native';
 import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
-import { useAppTheme } from '@/shared/theme/use-app-theme';
 
 interface Props extends Omit<PressableProps, 'style'> {
   label: string;

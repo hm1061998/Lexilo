@@ -1,12 +1,13 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useMemo } from 'react';
 import { useRepositories } from '@/database/repositories/use-repositories';
 import { queryKeys } from '@/services/query/query-keys';
-import { StudySessionService } from '../services/study-session.service';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMemo } from 'react';
 import type { SubmitStudyAnswerInput } from '../repositories/study-repository';
+import { StudySessionService } from '../services/study-session.service';
 import type { StudySetup } from '../types/study.types';
-import { SystemClock } from '../utils/study-time';
 import { systemRandom } from '../utils/shuffle';
+import { SystemClock } from '../utils/study-time';
+
 function useService() {
   const { study } = useRepositories();
   return useMemo(() => new StudySessionService(study, new SystemClock(), systemRandom), [study]);

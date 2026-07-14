@@ -1,6 +1,6 @@
+import { SQLiteSyncQueueRepository } from '@/features/synchronization/repositories/sqlite-sync-queue-repository';
 import { randomUUID } from 'expo-crypto';
 import type { SQLiteDatabase } from 'expo-sqlite';
-import { SQLiteSyncQueueRepository } from '@/features/synchronization/repositories/sqlite-sync-queue-repository';
 import type { CsvCardRow } from './csv-parser';
 
 export type DuplicateStrategy = 'skip' | 'create' | 'update';

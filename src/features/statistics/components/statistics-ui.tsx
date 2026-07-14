@@ -1,8 +1,111 @@
-import { StyleSheet,Text,View } from 'react-native';
 import { useAppTheme } from '@/shared/theme/use-app-theme';
-import type { DailyStatisticsPoint,GoalProgress,StudyActivityDay } from '../types/statistics.types';
-export function MetricCard({label,value,detail}:{label:string;value:string|number;detail?:string}){const{colors}=useAppTheme();return <View style={[s.card,{backgroundColor:colors.surface,borderColor:colors.border}]} accessibilityLabel={`${label}: ${value}${detail?`, ${detail}`:''}`}><Text style={{color:colors.textMuted}}>{label}</Text><Text style={[s.value,{color:colors.text}]}>{value}</Text>{detail?<Text style={{color:colors.textMuted}}>{detail}</Text>:null}</View>}
-export function GoalBar({label,progress}:{label:string;progress:GoalProgress}){const{colors}=useAppTheme();return <View style={s.gap} accessibilityLabel={`${label}: ${progress.current} trên ${progress.target}`}><View style={s.row}><Text style={{color:colors.text}}>{label}</Text><Text style={{color:colors.textMuted}}>{progress.current}/{progress.target}</Text></View><View style={[s.track,{backgroundColor:colors.border}]}><View style={[s.fill,{backgroundColor:colors.primary,width:`${progress.ratio*100}%`}]} /></View></View>}
-export function BarChart({data}:{data:DailyStatisticsPoint[]}){const{colors}=useAppTheme();const shown=data.slice(-14),max=Math.max(1,...shown.map(x=>x.studiedCards));return <View><View style={s.bars}>{shown.map(d=><View key={d.date} style={s.barSlot} accessibilityLabel={`${d.date}: ${d.studiedCards} thẻ`}><View style={[s.bar,{height:Math.max(2,d.studiedCards/max*100),backgroundColor:colors.primary}]} /></View>)}</View><Text style={{color:colors.textMuted}}>14 ngày gần nhất · cột cao nhất {max} thẻ</Text></View>}
-export function Heatmap({days}:{days:StudyActivityDay[]}){const{colors}=useAppTheme();return <View style={s.heat}>{days.map(d=><View key={d.date} accessibilityLabel={`${d.date}: ${d.studiedCards} thẻ`} style={[s.cell,{backgroundColor:d.intensity===0?colors.border:colors.primary,opacity:d.intensity===0?0.35:0.25+d.intensity*.18}]} />)}</View>}
-const s=StyleSheet.create({card:{borderWidth:1,borderRadius:16,padding:16,minWidth:'47%',flex:1,gap:4},value:{fontSize:24,fontWeight:'800'},gap:{gap:7},row:{flexDirection:'row',justifyContent:'space-between'},track:{height:9,borderRadius:99,overflow:'hidden'},fill:{height:'100%',borderRadius:99},bars:{height:110,flexDirection:'row',alignItems:'flex-end',gap:4,marginBottom:8},barSlot:{flex:1,height:105,justifyContent:'flex-end'},bar:{width:'100%',borderRadius:4},heat:{flexDirection:'row',flexWrap:'wrap',gap:4},cell:{width:14,height:14,borderRadius:3}});
+import { StyleSheet, Text, View } from 'react-native';
+import type {
+  DailyStatisticsPoint,
+  GoalProgress,
+  StudyActivityDay,
+} from '../types/statistics.types';
+export function MetricCard({
+  label,
+  value,
+  detail,
+}: {
+  label: string;
+  value: string | number;
+  detail?: string;
+}) {
+  const { colors } = useAppTheme();
+  return (
+    <View
+      style={[s.card, { backgroundColor: colors.surface, borderColor: colors.border }]}
+      accessibilityLabel={`${label}: ${value}${detail ? `, ${detail}` : ''}`}
+    >
+      <Text style={{ color: colors.textMuted }}>{label}</Text>
+      <Text style={[s.value, { color: colors.text }]}>{value}</Text>
+      {detail ? <Text style={{ color: colors.textMuted }}>{detail}</Text> : null}
+    </View>
+  );
+}
+export function GoalBar({ label, progress }: { label: string; progress: GoalProgress }) {
+  const { colors } = useAppTheme();
+  return (
+    <View
+      style={s.gap}
+      accessibilityLabel={`${label}: ${progress.current} trên ${progress.target}`}
+    >
+      <View style={s.row}>
+        <Text style={{ color: colors.text }}>{label}</Text>
+        <Text style={{ color: colors.textMuted }}>
+          {progress.current}/{progress.target}
+        </Text>
+      </View>
+      <View style={[s.track, { backgroundColor: colors.border }]}>
+        <View
+          style={[s.fill, { backgroundColor: colors.primary, width: `${progress.ratio * 100}%` }]}
+        />
+      </View>
+    </View>
+  );
+}
+export function BarChart({ data }: { data: DailyStatisticsPoint[] }) {
+  const { colors } = useAppTheme();
+  const shown = data.slice(-14),
+    max = Math.max(1, ...shown.map((x) => x.studiedCards));
+  return (
+    <View>
+      <View style={s.bars}>
+        {shown.map((d) => (
+          <View
+            key={d.date}
+            style={s.barSlot}
+            accessibilityLabel={`${d.date}: ${d.studiedCards} thẻ`}
+          >
+            <View
+              style={[
+                s.bar,
+                {
+                  height: Math.max(2, (d.studiedCards / max) * 100),
+                  backgroundColor: colors.primary,
+                },
+              ]}
+            />
+          </View>
+        ))}
+      </View>
+      <Text style={{ color: colors.textMuted }}>14 ngày gần nhất · cột cao nhất {max} thẻ</Text>
+    </View>
+  );
+}
+export function Heatmap({ days }: { days: StudyActivityDay[] }) {
+  const { colors } = useAppTheme();
+  return (
+    <View style={s.heat}>
+      {days.map((d) => (
+        <View
+          key={d.date}
+          accessibilityLabel={`${d.date}: ${d.studiedCards} thẻ`}
+          style={[
+            s.cell,
+            {
+              backgroundColor: d.intensity === 0 ? colors.border : colors.primary,
+              opacity: d.intensity === 0 ? 0.35 : 0.25 + d.intensity * 0.18,
+            },
+          ]}
+        />
+      ))}
+    </View>
+  );
+}
+const s = StyleSheet.create({
+  card: { borderWidth: 1, borderRadius: 16, padding: 16, minWidth: '47%', flex: 1, gap: 4 },
+  value: { fontSize: 24, fontWeight: '800' },
+  gap: { gap: 7 },
+  row: { flexDirection: 'row', justifyContent: 'space-between' },
+  track: { height: 9, borderRadius: 99, overflow: 'hidden' },
+  fill: { height: '100%', borderRadius: 99 },
+  bars: { height: 110, flexDirection: 'row', alignItems: 'flex-end', gap: 4, marginBottom: 8 },
+  barSlot: { flex: 1, height: 105, justifyContent: 'flex-end' },
+  bar: { width: '100%', borderRadius: 4 },
+  heat: { flexDirection: 'row', flexWrap: 'wrap', gap: 4 },
+  cell: { width: 14, height: 14, borderRadius: 3 },
+});

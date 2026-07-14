@@ -1,8 +1,73 @@
-import { ScrollView,StyleSheet,Text,View } from 'react-native';
-import { BarChart,Heatmap,MetricCard } from '@/features/statistics/components/statistics-ui';
+import { BarChart, Heatmap, MetricCard } from '@/features/statistics/components/statistics-ui';
 import { useProgressQuery } from '@/features/statistics/hooks/use-statistics';
-import { ErrorState,LoadingState } from '@/shared/components/query-state';
+import { ErrorState, LoadingState } from '@/shared/components/query-state';
 import { useAppTheme } from '@/shared/theme/use-app-theme';
-export default function ProgressScreen(){const{colors}=useAppTheme();const q=useProgressQuery();if(q.isLoading)return <LoadingState/>;if(!q.data)return <ErrorState onRetry={()=>q.refetch()}/>;const{overview,daily,heatmap,decks,difficult}=q.data;return <ScrollView style={{backgroundColor:colors.background}} contentContainerStyle={s.screen}><Text style={[s.title,{color:colors.text}]}>Tiến độ 30 ngày</Text><View style={s.metrics}><MetricCard label="Thẻ đã học" value={overview.totals.studiedCards}/><MetricCard label="Độ chính xác" value={`${overview.accuracy}%`}/><MetricCard label="Ngày hoạt động" value={overview.activeDays}/><MetricCard label="Phút/ngày học" value={overview.averageMinutesPerActiveDay}/></View><Section title="Xu hướng học" colors={colors}><BarChart data={daily}/></Section><Section title="Hoạt động 12 tuần" colors={colors}><Heatmap days={heatmap}/></Section><Section title="Tiến độ theo bộ thẻ" colors={colors}>{decks.length?decks.map(d=><View key={d.deckId} style={s.line}><Text style={{color:colors.text,fontWeight:'600'}}>{d.name}</Text><Text style={{color:colors.textMuted}}>{d.masteredCards}/{d.totalCards} thành thạo · {d.accuracy}%</Text></View>):<Text style={{color:colors.textMuted}}>Chưa có bộ thẻ.</Text>}</Section><Section title="Thẻ cần chú ý" colors={colors}>{difficult.length?difficult.map(c=><View key={c.cardId} style={s.line}><Text style={{color:colors.text,fontWeight:'600'}}>{c.frontText}</Text><Text style={{color:colors.textMuted}}>{c.deckName} · điểm khó {c.difficultyScore}</Text></View>):<Text style={{color:colors.textMuted}}>Chưa có thẻ khó.</Text>}</Section></ScrollView>}
-function Section({title,colors,children}:any){return <View style={[s.panel,{backgroundColor:colors.surface}]}><Text style={[s.heading,{color:colors.text}]}>{title}</Text>{children}</View>}
-const s=StyleSheet.create({screen:{padding:20,gap:16},title:{fontSize:28,fontWeight:'800'},heading:{fontSize:19,fontWeight:'700'},metrics:{flexDirection:'row',flexWrap:'wrap',gap:10},panel:{padding:16,borderRadius:16,gap:14},line:{paddingVertical:8,gap:3}});
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+export default function ProgressScreen() {
+  const { colors } = useAppTheme();
+  const q = useProgressQuery();
+  if (q.isLoading) return <LoadingState />;
+  if (!q.data) return <ErrorState onRetry={() => q.refetch()} />;
+  const { overview, daily, heatmap, decks, difficult } = q.data;
+  return (
+    <ScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={s.screen}>
+      <Text style={[s.title, { color: colors.text }]}>Tiến độ 30 ngày</Text>
+      <View style={s.metrics}>
+        <MetricCard label="Thẻ đã học" value={overview.totals.studiedCards} />
+        <MetricCard label="Độ chính xác" value={`${overview.accuracy}%`} />
+        <MetricCard label="Ngày hoạt động" value={overview.activeDays} />
+        <MetricCard label="Phút/ngày học" value={overview.averageMinutesPerActiveDay} />
+      </View>
+      <Section title="Xu hướng học" colors={colors}>
+        <BarChart data={daily} />
+      </Section>
+      <Section title="Hoạt động 12 tuần" colors={colors}>
+        <Heatmap days={heatmap} />
+      </Section>
+      <Section title="Tiến độ theo bộ thẻ" colors={colors}>
+        {decks.length ? (
+          decks.map((d) => (
+            <View key={d.deckId} style={s.line}>
+              <Text style={{ color: colors.text, fontWeight: '600' }}>{d.name}</Text>
+              <Text style={{ color: colors.textMuted }}>
+                {d.masteredCards}/{d.totalCards} thành thạo · {d.accuracy}%
+              </Text>
+            </View>
+          ))
+        ) : (
+          <Text style={{ color: colors.textMuted }}>Chưa có bộ thẻ.</Text>
+        )}
+      </Section>
+      <Section title="Thẻ cần chú ý" colors={colors}>
+        {difficult.length ? (
+          difficult.map((c) => (
+            <View key={c.cardId} style={s.line}>
+              <Text style={{ color: colors.text, fontWeight: '600' }}>{c.frontText}</Text>
+              <Text style={{ color: colors.textMuted }}>
+                {c.deckName} · điểm khó {c.difficultyScore}
+              </Text>
+            </View>
+          ))
+        ) : (
+          <Text style={{ color: colors.textMuted }}>Chưa có thẻ khó.</Text>
+        )}
+      </Section>
+    </ScrollView>
+  );
+}
+function Section({ title, colors, children }: any) {
+  return (
+    <View style={[s.panel, { backgroundColor: colors.surface }]}>
+      <Text style={[s.heading, { color: colors.text }]}>{title}</Text>
+      {children}
+    </View>
+  );
+}
+const s = StyleSheet.create({
+  screen: { padding: 20, gap: 16 },
+  title: { fontSize: 28, fontWeight: '800' },
+  heading: { fontSize: 19, fontWeight: '700' },
+  metrics: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  panel: { padding: 16, borderRadius: 16, gap: 14 },
+  line: { paddingVertical: 8, gap: 3 },
+});

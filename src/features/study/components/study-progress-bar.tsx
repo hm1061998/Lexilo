@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native';
 import { useAppTheme } from '@/shared/theme/use-app-theme';
+import { StyleSheet, Text, View } from 'react-native';
 export function StudyProgressBar({ current, total }: { current: number; total: number }) {
   const { colors } = useAppTheme();
   const value = total ? Math.min(1, current / total) : 0;

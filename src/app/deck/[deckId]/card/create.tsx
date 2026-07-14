@@ -1,10 +1,10 @@
-import { router, useLocalSearchParams } from 'expo-router';
-import { Alert } from 'react-native';
+import { useRepositories } from '@/database/repositories/use-repositories';
 import { CardForm } from '@/features/cards/components/card-form';
 import { useCreateCardMutation } from '@/features/cards/hooks/use-cards';
 import type { CardFormValues } from '@/features/cards/schemas/card-form-schema';
-import { useRepositories } from '@/database/repositories/use-repositories';
 import { parseCommaSeparatedValues } from '@/shared/utils/strings';
+import { router, useLocalSearchParams } from 'expo-router';
+import { Alert } from 'react-native';
 
 export default function CreateCardScreen() {
   const { deckId = '' } = useLocalSearchParams<{ deckId: string }>();

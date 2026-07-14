@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { useDecksQuery } from '@/features/decks/hooks/use-decks';
-import { useDebouncedValue } from '@/shared/hooks/use-debounced-value';
 import { EmptyState, ErrorState, LoadingState } from '@/shared/components/query-state';
+import { useDebouncedValue } from '@/shared/hooks/use-debounced-value';
 import { useAppTheme } from '@/shared/theme/use-app-theme';
 
 export default function DecksScreen() {

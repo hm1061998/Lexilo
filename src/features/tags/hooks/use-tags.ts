@@ -1,6 +1,6 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRepositories } from '@/database/repositories/use-repositories';
 import { queryKeys } from '@/services/query/query-keys';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export function useTagsQuery(search?: string) {
   const { tags } = useRepositories();

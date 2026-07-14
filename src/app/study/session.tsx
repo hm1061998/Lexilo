@@ -1,14 +1,3 @@
-import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect } from 'react';
-import {
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
 import { evaluateTypingAnswer } from '@/features/study/algorithms/answer-normalizer';
 import { ReviewRatingButtons } from '@/features/study/components/review-rating-buttons';
 import { StudyProgressBar } from '@/features/study/components/study-progress-bar';
@@ -27,6 +16,18 @@ import type { ReviewRating } from '@/features/study/types/study.types';
 import { AppButton } from '@/shared/components/app-button';
 import { LoadingState } from '@/shared/components/query-state';
 import { useAppTheme } from '@/shared/theme/use-app-theme';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useEffect } from 'react';
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+
 export default function StudySessionScreen() {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
   const { colors } = useAppTheme();

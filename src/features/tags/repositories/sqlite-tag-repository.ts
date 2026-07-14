@@ -4,8 +4,8 @@ import type { SQLiteDatabase } from 'expo-sqlite';
 import { SQLiteSyncQueueRepository } from '@/features/synchronization/repositories/sqlite-sync-queue-repository';
 import { DatabaseError, TagAlreadyExistsError } from '@/shared/errors/app-error';
 import { escapeLikePattern } from '@/shared/utils/strings';
-import type { TagRepository } from './tag-repository';
 import type { Tag } from '../types/tag';
+import type { TagRepository } from './tag-repository';
 
 interface TagRow {
   id: string;

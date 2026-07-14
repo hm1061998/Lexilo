@@ -1,6 +1,6 @@
+import { SQLiteSyncQueueRepository } from '@/features/synchronization/repositories/sqlite-sync-queue-repository';
 import { randomUUID } from 'expo-crypto';
 import type { SQLiteDatabase } from 'expo-sqlite';
-import { SQLiteSyncQueueRepository } from '@/features/synchronization/repositories/sqlite-sync-queue-repository';
 
 type SeedCard = readonly [word: string, meaning: string, phonetic: string, part: string];
 const decks: readonly {

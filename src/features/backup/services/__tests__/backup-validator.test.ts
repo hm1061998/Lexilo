@@ -1,3 +1,20 @@
-import { checksumText,stableStringify,validateBackup } from '../backup-validator.service';
-const base={format:'lexilo-backup' as const,backupVersion:1,databaseVersion:5,createdAt:1,checksum:'',collections:{decks:[],cards:[],card_progress:[],learning_goals:[]},settings:{}};
-describe('backup validation',()=>{it('accepts checksum',()=>{const b={...base};b.checksum=checksumText(stableStringify(b));expect(validateBackup(b)).toBe(b)});it('rejects invalid JSON shape',()=>expect(()=>validateBackup({})).toThrow());it('rejects wrong checksum',()=>expect(()=>validateBackup({...base,checksum:'bad'})).toThrow());});
+import { checksumText, stableStringify, validateBackup } from '../backup-validator.service';
+const base = {
+  format: 'lexilo-backup' as const,
+  backupVersion: 1,
+  databaseVersion: 5,
+  createdAt: 1,
+  checksum: '',
+  collections: { decks: [], cards: [], card_progress: [], learning_goals: [] },
+  settings: {},
+};
+describe('backup validation', () => {
+  it('accepts checksum', () => {
+    const b = { ...base };
+    b.checksum = checksumText(stableStringify(b));
+    expect(validateBackup(b)).toBe(b);
+  });
+  it('rejects invalid JSON shape', () => expect(() => validateBackup({})).toThrow());
+  it('rejects wrong checksum', () =>
+    expect(() => validateBackup({ ...base, checksum: 'bad' })).toThrow());
+});

@@ -1,6 +1,6 @@
+import { useAppTheme } from '@/shared/theme/use-app-theme';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { AppButton } from './app-button';
-import { useAppTheme } from '@/shared/theme/use-app-theme';
 
 export function LoadingState() {
   const { colors } = useAppTheme();

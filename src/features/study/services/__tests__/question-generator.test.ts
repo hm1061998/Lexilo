@@ -1,5 +1,5 @@
-import { generateStudyQuestion } from '../question-generator.service';
 import type { StudyCard } from '../../types/study.types';
+import { generateStudyQuestion } from '../question-generator.service';
 const card = (id: string, front: string, back: string, part = 'noun'): StudyCard => ({
   cardId: id,
   deckId: 'd',

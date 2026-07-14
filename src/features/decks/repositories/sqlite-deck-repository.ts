@@ -1,8 +1,11 @@
 import { randomUUID } from 'expo-crypto';
 import type { SQLiteDatabase } from 'expo-sqlite';
 
-import type { DeckRow } from '@/database/rows/deck-row';
 import { replaceEntityTags } from '@/database/repositories/repository-utils';
+import type { DeckRow } from '@/database/rows/deck-row';
+import { SQLiteSyncQueueRepository } from '@/features/synchronization/repositories/sqlite-sync-queue-repository';
+import { DatabaseError, DeckNotFoundError } from '@/shared/errors/app-error';
+import { escapeLikePattern } from '@/shared/utils/strings';
 import { mapDeckRow } from '../mappers/deck-mapper';
 import type {
   CreateDeckInput,
@@ -12,9 +15,6 @@ import type {
   UpdateDeckInput,
 } from '../types/deck';
 import type { DeckRepository } from './deck-repository';
-import { SQLiteSyncQueueRepository } from '@/features/synchronization/repositories/sqlite-sync-queue-repository';
-import { DatabaseError, DeckNotFoundError } from '@/shared/errors/app-error';
-import { escapeLikePattern } from '@/shared/utils/strings';
 
 type SqlValue = string | number | null;
 const DECK_SELECT = `SELECT d.*,

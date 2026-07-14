@@ -1,15 +1,15 @@
-import { randomUUID } from 'expo-crypto';
 import { NoStudyCardsAvailableError } from '@/shared/errors/app-error';
-import { studySetupSchema } from '../schemas/study-setup.schema';
-import { generateStudyQuestion } from './question-generator.service';
+import { randomUUID } from 'expo-crypto';
 import type {
   StudySessionRepository,
   SubmitStudyAnswerInput,
 } from '../repositories/study-repository';
+import { studySetupSchema } from '../schemas/study-setup.schema';
 import type { StudyCard, StudySession, StudySessionResult, StudySetup } from '../types/study.types';
-import type { Clock } from '../utils/study-time';
 import type { RandomSource } from '../utils/shuffle';
 import { shuffle } from '../utils/shuffle';
+import type { Clock } from '../utils/study-time';
+import { generateStudyQuestion } from './question-generator.service';
 export class StudySessionService {
   constructor(
     private readonly repository: StudySessionRepository,

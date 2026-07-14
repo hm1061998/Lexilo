@@ -1,10 +1,10 @@
-import { router, useLocalSearchParams } from 'expo-router';
-import { Alert } from 'react-native';
 import { DeckForm } from '@/features/decks/components/deck-form';
 import { useDeckDetailQuery, useUpdateDeckMutation } from '@/features/decks/hooks/use-decks';
 import type { DeckFormValues } from '@/features/decks/schemas/deck-form-schema';
-import { ErrorState, LoadingState } from '@/shared/components/query-state';
 import { useTagsQuery } from '@/features/tags/hooks/use-tags';
+import { ErrorState, LoadingState } from '@/shared/components/query-state';
+import { router, useLocalSearchParams } from 'expo-router';
+import { Alert } from 'react-native';
 
 export default function EditDeckScreen() {
   const { id = '' } = useLocalSearchParams<{ id: string }>();

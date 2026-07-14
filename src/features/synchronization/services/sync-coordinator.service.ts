@@ -1,3 +1,95 @@
-import{randomUUID}from'expo-crypto';import type{SQLiteDatabase}from'expo-sqlite';import{SyncAlreadyRunningError,SyncNetworkUnavailableError}from'@/shared/errors/app-error';import type{RemoteSyncAdapter}from'../adapters/remote-sync.adapter';import type{SyncQueueItem,SyncSummary}from'../types/sync.types';import{getRetryDelay}from'./retry-policy.service';import type{NetworkStatusService}from'./network-status.service';
-let running=false;
-export class SyncCoordinator{constructor(private db:SQLiteDatabase,private remote:RemoteSyncAdapter,private network:NetworkStatusService){}async synchronize():Promise<SyncSummary>{if(running)throw new SyncAlreadyRunningError('Đồng bộ đang chạy.');running=true;const startedAt=Date.now(),session=randomUUID();let pushed=0,pulled=0,failed=0;try{const network=await this.network.get();if(!network.connected||!network.reachable)throw new SyncNetworkUnavailableError('Không có kết nối Internet.');const rows=await this.db.getAllAsync<Record<string,unknown>>(`SELECT * FROM sync_queue WHERE status IN ('pending','failed') AND (next_retry_at IS NULL OR next_retry_at<=?) ORDER BY priority,created_at LIMIT 50`,[startedAt]);for(const r of rows){const item:SyncQueueItem={id:String(r.id),entityType:r.entity_type as SyncQueueItem['entityType'],entityId:String(r.entity_id),operation:r.operation as SyncQueueItem['operation'],payload:r.payload?JSON.parse(String(r.payload)):null,retryCount:Number(r.retry_count),priority:Number(r.priority)};await this.db.runAsync(`UPDATE sync_queue SET status='processing',locked_at=?,lock_owner=? WHERE id=?`,[Date.now(),session,item.id]);const result=await this.remote.push(item);if(result.accepted){await this.db.runAsync(`UPDATE sync_queue SET status='completed',completed_at=?,locked_at=NULL,lock_owner=NULL WHERE id=?`,[Date.now(),item.id]);pushed++;}else{const retry=getRetryDelay({attempt:item.retryCount+1,permanent:result.permanent});await this.db.runAsync(`UPDATE sync_queue SET status=?,retry_count=retry_count+1,next_retry_at=?,error_message=?,locked_at=NULL,lock_owner=NULL WHERE id=?`,[retry===null?'failed':'pending',retry===null?null:Date.now()+retry,result.error??'sync failed',item.id]);failed++;}}const cursor=(await this.db.getFirstAsync<{value:string}>('SELECT value FROM sync_metadata WHERE key=\'last_pull_cursor\''))?.value??'0';let page=await this.remote.pull(cursor,100);pulled+=page.changes.length;while(page.hasMore){page=await this.remote.pull(page.cursor,100);pulled+=page.changes.length;}const completedAt=Date.now();await this.db.runAsync(`INSERT OR REPLACE INTO sync_metadata(key,value) VALUES('last_pull_cursor',?),('last_sync_at',?),('last_successful_sync_at',?),('last_sync_error',NULL)`,[page.cursor,String(completedAt),String(completedAt)]);await this.db.runAsync(`INSERT INTO sync_logs(id,sync_session_id,direction,status,metadata_json,started_at,completed_at) VALUES(?,?, 'local','success',?,?,?)`,[randomUUID(),session,JSON.stringify({pushed,pulled,failed}),startedAt,completedAt]);return{pushed,pulled,failed,conflicts:0,startedAt,completedAt};}finally{running=false}}}
+import { SyncAlreadyRunningError, SyncNetworkUnavailableError } from '@/shared/errors/app-error';
+import { randomUUID } from 'expo-crypto';
+import type { SQLiteDatabase } from 'expo-sqlite';
+import type { RemoteSyncAdapter } from '../adapters/remote-sync.adapter';
+import type { SyncQueueItem, SyncSummary } from '../types/sync.types';
+import type { NetworkStatusService } from './network-status.service';
+import { getRetryDelay } from './retry-policy.service';
+let running = false;
+export class SyncCoordinator {
+  constructor(
+    private db: SQLiteDatabase,
+    private remote: RemoteSyncAdapter,
+    private network: NetworkStatusService,
+  ) {}
+  async synchronize(): Promise<SyncSummary> {
+    if (running) throw new SyncAlreadyRunningError('Đồng bộ đang chạy.');
+    running = true;
+    const startedAt = Date.now(),
+      session = randomUUID();
+    let pushed = 0,
+      pulled = 0,
+      failed = 0;
+    try {
+      const network = await this.network.get();
+      if (!network.connected || !network.reachable)
+        throw new SyncNetworkUnavailableError('Không có kết nối Internet.');
+      const rows = await this.db.getAllAsync<Record<string, unknown>>(
+        `SELECT * FROM sync_queue WHERE status IN ('pending','failed') AND (next_retry_at IS NULL OR next_retry_at<=?) ORDER BY priority,created_at LIMIT 50`,
+        [startedAt],
+      );
+      for (const r of rows) {
+        const item: SyncQueueItem = {
+          id: String(r.id),
+          entityType: r.entity_type as SyncQueueItem['entityType'],
+          entityId: String(r.entity_id),
+          operation: r.operation as SyncQueueItem['operation'],
+          payload: r.payload ? JSON.parse(String(r.payload)) : null,
+          retryCount: Number(r.retry_count),
+          priority: Number(r.priority),
+        };
+        await this.db.runAsync(
+          `UPDATE sync_queue SET status='processing',locked_at=?,lock_owner=? WHERE id=?`,
+          [Date.now(), session, item.id],
+        );
+        const result = await this.remote.push(item);
+        if (result.accepted) {
+          await this.db.runAsync(
+            `UPDATE sync_queue SET status='completed',completed_at=?,locked_at=NULL,lock_owner=NULL WHERE id=?`,
+            [Date.now(), item.id],
+          );
+          pushed++;
+        } else {
+          const retry = getRetryDelay({
+            attempt: item.retryCount + 1,
+            permanent: result.permanent,
+          });
+          await this.db.runAsync(
+            `UPDATE sync_queue SET status=?,retry_count=retry_count+1,next_retry_at=?,error_message=?,locked_at=NULL,lock_owner=NULL WHERE id=?`,
+            [
+              retry === null ? 'failed' : 'pending',
+              retry === null ? null : Date.now() + retry,
+              result.error ?? 'sync failed',
+              item.id,
+            ],
+          );
+          failed++;
+        }
+      }
+      const cursor =
+        (
+          await this.db.getFirstAsync<{ value: string }>(
+            "SELECT value FROM sync_metadata WHERE key='last_pull_cursor'",
+          )
+        )?.value ?? '0';
+      let page = await this.remote.pull(cursor, 100);
+      pulled += page.changes.length;
+      while (page.hasMore) {
+        page = await this.remote.pull(page.cursor, 100);
+        pulled += page.changes.length;
+      }
+      const completedAt = Date.now();
+      await this.db.runAsync(
+        `INSERT OR REPLACE INTO sync_metadata(key,value) VALUES('last_pull_cursor',?),('last_sync_at',?),('last_successful_sync_at',?),('last_sync_error',NULL)`,
+        [page.cursor, String(completedAt), String(completedAt)],
+      );
+      await this.db.runAsync(
+        `INSERT INTO sync_logs(id,sync_session_id,direction,status,metadata_json,started_at,completed_at) VALUES(?,?, 'local','success',?,?,?)`,
+        [randomUUID(), session, JSON.stringify({ pushed, pulled, failed }), startedAt, completedAt],
+      );
+      return { pushed, pulled, failed, conflicts: 0, startedAt, completedAt };
+    } finally {
+      running = false;
+    }
+  }
+}

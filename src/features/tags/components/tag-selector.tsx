@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { AppButton } from '@/shared/components/app-button';
 import { AppInput } from '@/shared/components/app-input';
 import { useAppTheme } from '@/shared/theme/use-app-theme';
+import { useState } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useCreateTagMutation, useTagsQuery } from '../hooks/use-tags';
 
 export function TagSelector({

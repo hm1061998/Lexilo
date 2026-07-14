@@ -1,9 +1,9 @@
-import { Link, router, useLocalSearchParams } from 'expo-router';
-import * as Speech from 'expo-speech';
-import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useCardDetailQuery, useDeleteCardMutation } from '@/features/cards/hooks/use-cards';
 import { ErrorState, LoadingState } from '@/shared/components/query-state';
 import { useAppTheme } from '@/shared/theme/use-app-theme';
+import { Link, router, useLocalSearchParams } from 'expo-router';
+import * as Speech from 'expo-speech';
+import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 export default function CardDetailScreen() {
   const { id = '' } = useLocalSearchParams<{ id: string }>();

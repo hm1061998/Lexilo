@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native';
 import { AppButton } from '@/shared/components/app-button';
+import { StyleSheet, Text, View } from 'react-native';
 import type { ReviewRating } from '../types/study.types';
 const ratings: readonly [ReviewRating, string, string][] = [
   ['again', 'Quên', 'Ôn lại sau 10 phút'],

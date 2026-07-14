@@ -1,9 +1,10 @@
-import { useEffect, useRef } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { TextToSpeechService } from '@/features/media/services/text-to-speech.service';
 import { AppButton } from '@/shared/components/app-button';
 import { useAppTheme } from '@/shared/theme/use-app-theme';
+import { useEffect, useRef } from 'react';
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import type { StudyQuestion } from '../types/study.types';
-import { TextToSpeechService } from '@/features/media/services/text-to-speech.service';
+
 export function StudyQuestionView({
   question,
   selected,
@@ -28,7 +29,10 @@ export function StudyQuestionView({
     return (
       <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
         <Text style={[styles.prompt, { color: colors.text }]}>{question.frontText}</Text>
-        <AppButton label="Nghe phát âm" onPress={() => new TextToSpeechService().speak(question.frontText)} />
+        <AppButton
+          label="Nghe phát âm"
+          onPress={() => new TextToSpeechService().speak(question.frontText)}
+        />
         <Text style={{ color: colors.textMuted }}>{question.phonetic}</Text>
         {showAnswer ? (
           <>

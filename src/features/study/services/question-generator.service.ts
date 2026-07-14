@@ -1,7 +1,7 @@
 import { NotEnoughMultipleChoiceOptionsError } from '@/shared/errors/app-error';
+import type { StudyCard, StudyMode, StudyQuestion } from '../types/study.types';
 import type { RandomSource } from '../utils/shuffle';
 import { shuffle } from '../utils/shuffle';
-import type { StudyCard, StudyMode, StudyQuestion } from '../types/study.types';
 
 export function generateStudyQuestion(
   card: StudyCard,

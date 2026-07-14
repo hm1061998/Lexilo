@@ -1,9 +1,9 @@
 import type { SQLiteDatabase } from 'expo-sqlite';
 
+import { DatabaseError } from '@/shared/errors/app-error';
 import { DATABASE_VERSION } from './database';
 import { migrations } from './migrations';
 import { seedDevelopmentData } from './seeds/seed-development-data';
-import { DatabaseError } from '@/shared/errors/app-error';
 
 interface UserVersionRow {
   user_version: number;

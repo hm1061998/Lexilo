@@ -1,6 +1,6 @@
+import { useAppTheme } from '@/shared/theme/use-app-theme';
 import type { TextInputProps } from 'react-native';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
-import { useAppTheme } from '@/shared/theme/use-app-theme';
 
 interface Props extends TextInputProps {
   label: string;

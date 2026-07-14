@@ -1,2 +1,45 @@
-import * as Notifications from 'expo-notifications';import { NotificationPermissionDeniedError,NotificationSchedulingError } from '@/shared/errors/app-error';import type{ReminderSettings}from'../types/notification.types';
-export class NotificationSchedulerService{async permission(){const p=await Notifications.getPermissionsAsync();return p.status}async requestPermission(){return (await Notifications.requestPermissionsAsync()).status}async reschedule(settings:ReminderSettings,dueCards:number){await Notifications.cancelAllScheduledNotificationsAsync();if(!settings.enabled)return[];const status=await this.permission();if(status!=='granted')throw new NotificationPermissionDeniedError('Chưa cấp quyền thông báo.');if(settings.remindOnlyWhenDue&&dueCards<settings.minimumDueCards)return[];try{return await Promise.all(settings.reminderDays.map(weekday=>Notifications.scheduleNotificationAsync({content:{title:'Đến giờ học Lexilo',body:dueCards>0?`Bạn có ${dueCards} thẻ cần ôn.`:'Duy trì chuỗi học hôm nay nhé!',data:{url:'/study/setup'}},trigger:{type:Notifications.SchedulableTriggerInputTypes.WEEKLY,weekday:weekday===7?1:weekday+1,hour:settings.reminderHour,minute:settings.reminderMinute}})))}catch(cause){throw new NotificationSchedulingError('Không thể lên lịch nhắc học.',{cause})}}}
+import {
+  NotificationPermissionDeniedError,
+  NotificationSchedulingError,
+} from '@/shared/errors/app-error';
+import * as Notifications from 'expo-notifications';
+import type { ReminderSettings } from '../types/notification.types';
+export class NotificationSchedulerService {
+  async permission() {
+    const p = await Notifications.getPermissionsAsync();
+    return p.status;
+  }
+  async requestPermission() {
+    return (await Notifications.requestPermissionsAsync()).status;
+  }
+  async reschedule(settings: ReminderSettings, dueCards: number) {
+    await Notifications.cancelAllScheduledNotificationsAsync();
+    if (!settings.enabled) return [];
+    const status = await this.permission();
+    if (status !== 'granted')
+      throw new NotificationPermissionDeniedError('Chưa cấp quyền thông báo.');
+    if (settings.remindOnlyWhenDue && dueCards < settings.minimumDueCards) return [];
+    try {
+      return await Promise.all(
+        settings.reminderDays.map((weekday) =>
+          Notifications.scheduleNotificationAsync({
+            content: {
+              title: 'Đến giờ học Lexilo',
+              body:
+                dueCards > 0 ? `Bạn có ${dueCards} thẻ cần ôn.` : 'Duy trì chuỗi học hôm nay nhé!',
+              data: { url: '/study/setup' },
+            },
+            trigger: {
+              type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
+              weekday: weekday === 7 ? 1 : weekday + 1,
+              hour: settings.reminderHour,
+              minute: settings.reminderMinute,
+            },
+          }),
+        ),
+      );
+    } catch (cause) {
+      throw new NotificationSchedulingError('Không thể lên lịch nhắc học.', { cause });
+    }
+  }
+}

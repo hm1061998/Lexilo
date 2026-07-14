@@ -1,9 +1,10 @@
-import { router, useLocalSearchParams } from 'expo-router';
-import { ScrollView, StyleSheet, Text } from 'react-native';
 import { useStudyResultQuery } from '@/features/study/hooks/use-study';
 import { AppButton } from '@/shared/components/app-button';
 import { ErrorState, LoadingState } from '@/shared/components/query-state';
 import { useAppTheme } from '@/shared/theme/use-app-theme';
+import { router, useLocalSearchParams } from 'expo-router';
+import { ScrollView, StyleSheet, Text } from 'react-native';
+
 export default function StudyResultScreen() {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
   const { colors } = useAppTheme();

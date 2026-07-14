@@ -1,8 +1,8 @@
 import { randomUUID } from 'expo-crypto';
 import type { SQLiteDatabase } from 'expo-sqlite';
 
-import type { CardRow } from '@/database/rows/card-row';
 import { replaceEntityTags } from '@/database/repositories/repository-utils';
+import type { CardRow } from '@/database/rows/card-row';
 import { SQLiteSyncQueueRepository } from '@/features/synchronization/repositories/sqlite-sync-queue-repository';
 import { CardNotFoundError, DatabaseError, DeckNotFoundError } from '@/shared/errors/app-error';
 import { escapeLikePattern } from '@/shared/utils/strings';

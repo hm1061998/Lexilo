@@ -1,10 +1,10 @@
+import { TagSelector } from '@/features/tags/components/tag-selector';
+import { AppButton } from '@/shared/components/app-button';
+import { AppInput } from '@/shared/components/app-input';
+import { useAppTheme } from '@/shared/theme/use-app-theme';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet } from 'react-native';
-import { AppButton } from '@/shared/components/app-button';
-import { AppInput } from '@/shared/components/app-input';
-import { TagSelector } from '@/features/tags/components/tag-selector';
-import { useAppTheme } from '@/shared/theme/use-app-theme';
 import { cardFormSchema, type CardFormValues } from '../schemas/card-form-schema';
 
 const fields: {

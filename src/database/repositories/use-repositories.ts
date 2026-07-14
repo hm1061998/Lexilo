@@ -3,10 +3,10 @@ import { useMemo } from 'react';
 
 import { SQLiteCardRepository } from '@/features/cards/repositories/sqlite-card-repository';
 import { SQLiteDeckRepository } from '@/features/decks/repositories/sqlite-deck-repository';
-import { SQLiteTagRepository } from '@/features/tags/repositories/sqlite-tag-repository';
-import { SQLiteStudyRepository } from '@/features/study/repositories/sqlite-study-repository';
-import { SQLiteStatisticsRepository } from '@/features/statistics/repositories/sqlite-statistics-repository';
 import { SQLiteNotificationSettingsRepository } from '@/features/notifications/repositories/sqlite-notification-settings.repository';
+import { SQLiteStatisticsRepository } from '@/features/statistics/repositories/sqlite-statistics-repository';
+import { SQLiteStudyRepository } from '@/features/study/repositories/sqlite-study-repository';
+import { SQLiteTagRepository } from '@/features/tags/repositories/sqlite-tag-repository';
 
 export function useRepositories() {
   const database = useSQLiteContext();

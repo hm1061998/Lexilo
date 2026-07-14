@@ -1,5 +1,3 @@
-import { randomUUID } from 'expo-crypto';
-import type { SQLiteDatabase } from 'expo-sqlite';
 import { SQLiteSyncQueueRepository } from '@/features/synchronization/repositories/sqlite-sync-queue-repository';
 import {
   ActiveStudySessionExistsError,
@@ -9,16 +7,11 @@ import {
   StudyItemNotFoundError,
   StudySessionNotFoundError,
 } from '@/shared/errors/app-error';
+import { randomUUID } from 'expo-crypto';
+import type { SQLiteDatabase } from 'expo-sqlite';
 import { calculateNextReview } from '../algorithms/spaced-repetition';
 import { calculateAnswerXp } from '../algorithms/xp-calculator';
 import { REVIEW_RATING_SCORE } from '../constants/study.constants';
-import type {
-  CreateStudySessionInput,
-  GetStudyCandidatesOptions,
-  StudySessionRepository,
-  SubmitStudyAnswerInput,
-  SubmitStudyAnswerResult,
-} from './study-repository';
 import type {
   CardLearningStatus,
   StudyCard,
@@ -29,6 +22,13 @@ import type {
   StudySetup,
 } from '../types/study.types';
 import { toLocalStudyDate } from '../utils/study-time';
+import type {
+  CreateStudySessionInput,
+  GetStudyCandidatesOptions,
+  StudySessionRepository,
+  SubmitStudyAnswerInput,
+  SubmitStudyAnswerResult,
+} from './study-repository';
 
 interface SessionRow {
   id: string;

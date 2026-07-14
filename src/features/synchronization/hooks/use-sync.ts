@@ -1,2 +1,43 @@
-import{useMutation,useQuery,useQueryClient}from'@tanstack/react-query';import{useSQLiteContext}from'expo-sqlite';import{useMemo}from'react';import{MockRemoteSyncAdapter}from'../adapters/mock-remote-sync.adapter';import{NetworkStatusService}from'../services/network-status.service';import{SyncCoordinator}from'../services/sync-coordinator.service';
-export function useSyncStatus(){const db=useSQLiteContext();return useQuery({queryKey:['sync','status'],queryFn:async()=>{const counts=await db.getFirstAsync<{pending:number;failed:number;processing:number}>(`SELECT SUM(CASE WHEN status='pending' THEN 1 ELSE 0 END) pending,SUM(CASE WHEN status='failed' THEN 1 ELSE 0 END) failed,SUM(CASE WHEN status='processing' THEN 1 ELSE 0 END) processing FROM sync_queue`);const last=await db.getFirstAsync<{value:string}>('SELECT value FROM sync_metadata WHERE key=\'last_successful_sync_at\'');return{pending:counts?.pending??0,failed:counts?.failed??0,processing:counts?.processing??0,lastSuccessfulAt:last?.value?Number(last.value):null}}})}export function useManualSync(){const db=useSQLiteContext(),client=useQueryClient();const service=useMemo(()=>new SyncCoordinator(db,new MockRemoteSyncAdapter(),new NetworkStatusService()),[db]);return useMutation({mutationFn:()=>service.synchronize(),onSuccess:()=>client.invalidateQueries({queryKey:['sync']})})}
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useSQLiteContext } from 'expo-sqlite';
+import { useMemo } from 'react';
+import { MockRemoteSyncAdapter } from '../adapters/mock-remote-sync.adapter';
+import { NetworkStatusService } from '../services/network-status.service';
+import { SyncCoordinator } from '../services/sync-coordinator.service';
+
+export function useSyncStatus() {
+  const db = useSQLiteContext();
+  return useQuery({
+    queryKey: ['sync', 'status'],
+    queryFn: async () => {
+      const counts = await db.getFirstAsync<{
+        pending: number;
+        failed: number;
+        processing: number;
+      }>(
+        `SELECT SUM(CASE WHEN status='pending' THEN 1 ELSE 0 END) pending,SUM(CASE WHEN status='failed' THEN 1 ELSE 0 END) failed,SUM(CASE WHEN status='processing' THEN 1 ELSE 0 END) processing FROM sync_queue`,
+      );
+      const last = await db.getFirstAsync<{ value: string }>(
+        "SELECT value FROM sync_metadata WHERE key='last_successful_sync_at'",
+      );
+      return {
+        pending: counts?.pending ?? 0,
+        failed: counts?.failed ?? 0,
+        processing: counts?.processing ?? 0,
+        lastSuccessfulAt: last?.value ? Number(last.value) : null,
+      };
+    },
+  });
+}
+export function useManualSync() {
+  const db = useSQLiteContext(),
+    client = useQueryClient();
+  const service = useMemo(
+    () => new SyncCoordinator(db, new MockRemoteSyncAdapter(), new NetworkStatusService()),
+    [db],
+  );
+  return useMutation({
+    mutationFn: () => service.synchronize(),
+    onSuccess: () => client.invalidateQueries({ queryKey: ['sync'] }),
+  });
+}
