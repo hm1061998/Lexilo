@@ -17,7 +17,14 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
+      ],
+      "package": "com.hm1061998.lexilo"
     },
     "web": {
       "output": "static",
@@ -27,8 +34,18 @@
       "expo-router",
       "expo-secure-store",
       "expo-sqlite",
-      ["expo-notifications", { "defaultChannel": "learning-reminders" }],
-      ["expo-audio", { "microphonePermission": "Cho phép Lexilo ghi âm phát âm của bạn." }],
+      [
+        "expo-notifications",
+        {
+          "defaultChannel": "learning-reminders"
+        }
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "Cho phép Lexilo ghi âm phát âm của bạn."
+        }
+      ],
       [
         "expo-splash-screen",
         {
@@ -41,6 +58,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "8033c5ec-4d02-4c3a-9284-7d47b5386fa3"
+      }
     }
   }
 }
