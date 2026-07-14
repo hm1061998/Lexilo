@@ -5,6 +5,7 @@ import { SQLiteCardRepository } from '@/features/cards/repositories/sqlite-card-
 import { SQLiteDeckRepository } from '@/features/decks/repositories/sqlite-deck-repository';
 import { SQLiteTagRepository } from '@/features/tags/repositories/sqlite-tag-repository';
 import { SQLiteStudyRepository } from '@/features/study/repositories/sqlite-study-repository';
+import { SQLiteStatisticsRepository } from '@/features/statistics/repositories/sqlite-statistics-repository';
 
 export function useRepositories() {
   const database = useSQLiteContext();
@@ -14,6 +15,7 @@ export function useRepositories() {
       cards: new SQLiteCardRepository(database),
       tags: new SQLiteTagRepository(database),
       study: new SQLiteStudyRepository(database),
+      statistics: new SQLiteStatisticsRepository(database),
     }),
     [database],
   );

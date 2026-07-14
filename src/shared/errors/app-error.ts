@@ -33,3 +33,9 @@ export class NoStudyCardsAvailableError extends AppError {}
 export class NotEnoughMultipleChoiceOptionsError extends AppError {}
 export class InvalidReviewRatingError extends AppError {}
 export class CardProgressNotFoundError extends AppError {}
+export class StatisticsUnavailableError extends AppError {}
+export class InvalidStatisticsRangeError extends AppError {}
+export class LearningGoalsNotFoundError extends AppError {}
+export class InvalidLearningGoalError extends AppError {}
+export class StatisticsRebuildError extends AppError {}
+export class InvalidDateRangeError extends AppError {}

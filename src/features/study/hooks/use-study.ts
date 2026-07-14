@@ -60,6 +60,7 @@ export function useSubmitStudyAnswerMutation(id: string) {
       Promise.all([
         client.setQueryData(queryKeys.study.session(id), result.session),
         client.invalidateQueries({ queryKey: queryKeys.study.currentItem(id) }),
+        client.invalidateQueries({ queryKey: queryKeys.statistics.all }),
       ]),
   });
 }
@@ -71,6 +72,7 @@ export function useCompleteStudySessionMutation() {
     onSuccess: (result) => {
       client.setQueryData(queryKeys.study.result(result.session.id), result);
       client.invalidateQueries({ queryKey: queryKeys.study.active });
+      client.invalidateQueries({ queryKey: queryKeys.statistics.all });
     },
   });
 }

@@ -401,7 +401,7 @@ export class SQLiteStudyRepository implements StudySessionRepository {
       const date = toLocalStudyDate(input.reviewedAt);
       const statId = randomUUID();
       await tx.runAsync(
-        `INSERT INTO daily_statistics(id,study_date,studied_cards,unique_cards,correct_answers,incorrect_answers,new_cards,reviewed_cards,study_seconds,earned_xp,created_at,updated_at,sync_status) VALUES(?,?,1,1,?,?,?,?,?,?,?,?,'pending') ON CONFLICT(study_date) DO UPDATE SET studied_cards=studied_cards+1,unique_cards=unique_cards+CASE WHEN NOT EXISTS(SELECT 1 FROM review_logs rl WHERE rl.card_id=? AND date(rl.reviewed_at/1000,'unixepoch','localtime')=?) THEN 1 ELSE 0 END,correct_answers=correct_answers+?,incorrect_answers=incorrect_answers+?,new_cards=new_cards+?,reviewed_cards=reviewed_cards+?,study_seconds=study_seconds+?,earned_xp=earned_xp+?,updated_at=?`,
+        `INSERT INTO daily_statistics(id,study_date,studied_cards,unique_cards,correct_answers,incorrect_answers,new_cards,reviewed_cards,study_seconds,earned_xp,created_at,updated_at,sync_status) VALUES(?,?,1,1,?,?,?,?,?,?,?,?,'pending') ON CONFLICT(study_date) DO UPDATE SET studied_cards=studied_cards+1,unique_cards=unique_cards+CASE WHEN NOT EXISTS(SELECT 1 FROM review_logs rl WHERE rl.id<>? AND rl.card_id=? AND date(rl.reviewed_at/1000,'unixepoch','localtime')=?) THEN 1 ELSE 0 END,correct_answers=correct_answers+?,incorrect_answers=incorrect_answers+?,new_cards=new_cards+?,reviewed_cards=reviewed_cards+?,study_seconds=study_seconds+?,earned_xp=earned_xp+?,updated_at=?`,
         [
           statId,
           date,
@@ -413,6 +413,7 @@ export class SQLiteStudyRepository implements StudySessionRepository {
           xp,
           input.reviewedAt,
           input.reviewedAt,
+          logId,
           input.cardId,
           date,
           input.isCorrect ? 1 : 0,

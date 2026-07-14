@@ -1,10 +1,7 @@
-import { PlaceholderScreen } from '@/shared/components/placeholder-screen';
-
-export default function SettingsScreen() {
-  return (
-    <PlaceholderScreen
-      title="Cài đặt"
-      description="Theme tự động đang theo hệ thống. Các tùy chọn học sẽ được bổ sung theo từng phase."
-    />
-  );
-}
+import { useState } from 'react';
+import { ScrollView,StyleSheet,Text } from 'react-native';
+import { AppButton } from '@/shared/components/app-button';import { AppInput } from '@/shared/components/app-input';import { ErrorState,LoadingState } from '@/shared/components/query-state';
+import { useGoalsQuery,useUpdateGoalsMutation } from '@/features/statistics/hooks/use-statistics';import { useAppTheme } from '@/shared/theme/use-app-theme';
+export default function SettingsScreen(){const q=useGoalsQuery();if(q.isLoading)return <LoadingState/>;if(!q.data)return <ErrorState onRetry={()=>q.refetch()}/>;return <GoalsForm key={q.data.updatedAt} goals={q.data}/>}
+function GoalsForm({goals}:any){const{colors}=useAppTheme();const save=useUpdateGoalsMutation();const[values,setValues]=useState<Record<string,string>>({dailyCardGoal:String(goals.dailyCardGoal),dailyMinutesGoal:String(goals.dailyMinutesGoal),weeklyDaysGoal:String(goals.weeklyDaysGoal),dailyNewCardsGoal:String(goals.dailyNewCardsGoal),dailyReviewCardsGoal:String(goals.dailyReviewCardsGoal)});const field=(key:string,label:string)=><AppInput label={label} keyboardType="number-pad" value={values[key]} onChangeText={v=>setValues(x=>({...x,[key]:v}))}/>;return <ScrollView style={{backgroundColor:colors.background}} contentContainerStyle={s.screen}><Text style={[s.title,{color:colors.text}]}>Mục tiêu học tập</Text>{field('dailyCardGoal','Số thẻ mỗi ngày')}{field('dailyMinutesGoal','Số phút mỗi ngày')}{field('weeklyDaysGoal','Số ngày mỗi tuần (1–7)')}{field('dailyNewCardsGoal','Thẻ mới mỗi ngày')}{field('dailyReviewCardsGoal','Thẻ ôn mỗi ngày')}<AppButton label={save.isPending?'Đang lưu…':'Lưu mục tiêu'} disabled={save.isPending} onPress={()=>save.mutate({dailyCardGoal:Number(values.dailyCardGoal),dailyMinutesGoal:Number(values.dailyMinutesGoal),weeklyDaysGoal:Number(values.weeklyDaysGoal),dailyNewCardsGoal:Number(values.dailyNewCardsGoal),dailyReviewCardsGoal:Number(values.dailyReviewCardsGoal)})}/>{save.isSuccess?<Text style={{color:colors.primary}}>Đã lưu mục tiêu.</Text>:null}{save.error?<Text style={{color:colors.danger}}>{save.error.message}</Text>:null}</ScrollView>}
+const s=StyleSheet.create({screen:{padding:20,gap:16},title:{fontSize:28,fontWeight:'800'}});

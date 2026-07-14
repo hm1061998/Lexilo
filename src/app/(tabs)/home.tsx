@@ -1,33 +1,10 @@
 import { Link } from 'expo-router';
-import { StyleSheet, Text, View } from 'react-native';
+import { RefreshControl,ScrollView,StyleSheet,Text,View } from 'react-native';
+import { useDashboardQuery } from '@/features/statistics/hooks/use-statistics';
+import { GoalBar,MetricCard } from '@/features/statistics/components/statistics-ui';
 import { useActiveStudySessionQuery } from '@/features/study/hooks/use-study';
 import { AppButton } from '@/shared/components/app-button';
+import { ErrorState,LoadingState } from '@/shared/components/query-state';
 import { useAppTheme } from '@/shared/theme/use-app-theme';
-export default function HomeScreen() {
-  const { colors } = useAppTheme();
-  const active = useActiveStudySessionQuery();
-  return (
-    <View style={[styles.screen, { backgroundColor: colors.background }]}>
-      <Text style={[styles.title, { color: colors.text }]}>Hôm nay học gì?</Text>
-      <Text style={{ color: colors.textMuted }}>Ôn đều mỗi ngày để ghi nhớ lâu hơn.</Text>
-      {active.data ? (
-        <Link href={{ pathname: '/study/session', params: { id: active.data.id } }} asChild>
-          <View>
-            <AppButton
-              label={`Tiếp tục phiên học (${active.data.answeredCards}/${active.data.totalCards})`}
-            />
-          </View>
-        </Link>
-      ) : null}
-      <Link href="/study/setup" asChild>
-        <View>
-          <AppButton label="Bắt đầu học" />
-        </View>
-      </Link>
-    </View>
-  );
-}
-const styles = StyleSheet.create({
-  screen: { flex: 1, padding: 24, gap: 18, justifyContent: 'center' },
-  title: { fontSize: 30, fontWeight: '800' },
-});
+export default function HomeScreen(){const{colors}=useAppTheme();const dashboard=useDashboardQuery();const active=useActiveStudySessionQuery();if(dashboard.isLoading)return <LoadingState/>;if(!dashboard.data)return <ErrorState onRetry={()=>dashboard.refetch()}/>;const d=dashboard.data;return <ScrollView style={{backgroundColor:colors.background}} contentContainerStyle={s.screen} refreshControl={<RefreshControl refreshing={dashboard.isRefetching} onRefresh={()=>dashboard.refetch()}/>}><Text style={[s.title,{color:colors.text}]}>Hôm nay</Text><Text style={{color:colors.textMuted}}>Mỗi ngày một chút, nhớ lâu hơn.</Text>{active.data?<Link href={{pathname:'/study/session',params:{id:active.data.id}}} asChild><View><AppButton label={`Tiếp tục (${active.data.answeredCards}/${active.data.totalCards})`}/></View></Link>:<Link href="/study/setup" asChild><View><AppButton label="Bắt đầu học"/></View></Link>}<View style={s.metrics}><MetricCard label="Chuỗi ngày" value={`${d.streak.current} 🔥`} detail={`Kỷ lục ${d.streak.longest}`}/><MetricCard label="Cần ôn" value={d.dueCards} detail={`${d.newCards} thẻ mới`}/><MetricCard label="XP tích lũy" value={d.totalXp}/><MetricCard label="Độ chính xác" value={`${d.today.correctAnswers+d.today.incorrectAnswers?Math.round(d.today.correctAnswers/(d.today.correctAnswers+d.today.incorrectAnswers)*100):0}%`}/></View><View style={[s.panel,{backgroundColor:colors.surface}]}><Text style={[s.heading,{color:colors.text}]}>Mục tiêu hôm nay</Text><GoalBar label="Thẻ đã học" progress={d.cardGoal}/><GoalBar label="Phút học" progress={d.minutesGoal}/><GoalBar label="Ngày học tuần này" progress={d.weeklyDays}/></View></ScrollView>}
+const s=StyleSheet.create({screen:{padding:20,gap:16},title:{fontSize:30,fontWeight:'800'},heading:{fontSize:19,fontWeight:'700'},metrics:{flexDirection:'row',flexWrap:'wrap',gap:10},panel:{padding:16,borderRadius:16,gap:16}});

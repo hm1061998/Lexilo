@@ -23,4 +23,12 @@ export const queryKeys = {
     currentItem: (id: string) => ['study', 'session', id, 'current-item'] as const,
     result: (id: string) => ['study', 'result', id] as const,
   },
+  statistics: {
+    all: ['statistics'] as const,
+    dashboard: (date: string) => ['statistics', 'dashboard', date] as const,
+    progress: (start: string, end: string) => ['statistics', 'progress', start, end] as const,
+    decks: ['statistics', 'decks'] as const,
+    difficult: ['statistics', 'difficult'] as const,
+    goals: ['statistics', 'goals'] as const,
+  },
 };
