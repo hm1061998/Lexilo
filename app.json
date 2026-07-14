@@ -5,11 +5,11 @@
     "owner": "hmnexus",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/app_logo.png",
     "scheme": "lexilo",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/app_logo.icon"
     },
     "android": {
       "adaptiveIcon": {
