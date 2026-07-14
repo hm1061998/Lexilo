@@ -2,6 +2,7 @@
   "expo": {
     "name": "Lexilo",
     "slug": "lexilo",
+    "owner": "hmnexus",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -23,8 +24,7 @@
         "android.permission.MODIFY_AUDIO_SETTINGS",
         "android.permission.FOREGROUND_SERVICE",
         "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
-      ],
-      "package": "com.hmstack.lexilo"
+      ]
     },
     "web": {
       "output": "static",
@@ -62,7 +62,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "8033c5ec-4d02-4c3a-9284-7d47b5386fa3"
+        "projectId": "88141d09-4b2c-457e-a66e-ec0975bff765"
       }
     }
   }
